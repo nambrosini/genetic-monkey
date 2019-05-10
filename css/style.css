@@ -1,0 +1,15 @@
+.row {
+    padding: 16px;
+}
+
+#phrases span {
+    font-size: 16px;
+    line-height: 16px;
+    float: left;
+    clear: left;
+}
+
+.row {
+    margin: 0;
+    padding: 0;
+}
