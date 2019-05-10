@@ -6,6 +6,9 @@ $(function() {
     var best = $('#bestMonkey');
     var generationNum = $('#generationNum');
     var averageFitness = $('#averageFitness');
+    var computationPerSecond = $('#compPerSec');
+    var mutationRateLabel = $('#mutationRateLabel');
+    var popSizeLabel = $('#popSizeLabel');
     var phrases = $('#phrases');
 
     var population;
@@ -17,6 +20,9 @@ $(function() {
             running = true;
             gNum = 1;
             population = new Population(target.val(), Number(popSize.val()), Number(mutationRate.val()) / 100);
+            computationPerSecond.html(1000 / (1000 / Number(speed.val())));
+            mutationRateLabel.html(mutationRate.val());
+            popSizeLabel.html(popSize.val());
             run();
         }
     });
@@ -55,7 +61,7 @@ $(function() {
     function run() {
         interval = setInterval(() => {
             runNext();
-        }, speed.val());
+        }, 1000 / Number(speed.val()));
     }
 
     function runNext() {
