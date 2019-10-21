@@ -42,5 +42,11 @@ class Monkey {
 }
 
 function getRandomChar() {
-    return String.fromCharCode(32 + Math.random() * (128 - 32));
+    return String.fromCharCode(32 + secureMathRandom() * (128 - 32));
 }
+
+// A more secure way to get a random number
+function secureMathRandom() {
+    // Divide a random UInt32 by the maximum value (2^32 -1) to get a result between 0 and 1
+    return window.crypto.getRandomValues(new Uint32Array(1))[0] / 4294967295;
+  }
