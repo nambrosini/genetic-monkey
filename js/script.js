@@ -1,4 +1,5 @@
 $(function() {
+    // Jquery fields
     var target = $('#targetText');
     var popSize = $('#popSize');
     var mutationRate = $('#mutationRate');
@@ -10,28 +11,40 @@ $(function() {
     var mutationRateLabel = $('#mutationRateLabel');
     var popSizeLabel = $('#popSizeLabel');
     var phrases = $('#phrases');
+    var nPhrases = $('#nPhrases');
 
     var population;
     var running = false;
+    // The generation count
     var gNum = 0;
     var interval;
+
+    // Run button click
     $('#runButton').click(() => {
-        if (!running) {
-            running = true;
-            gNum = 1;
-            population = new Population(target.val(), Number(popSize.val()), Number(mutationRate.val()) / 100);
-            computationPerSecond.html(1000 / (1000 / Number(speed.val())));
-            mutationRateLabel.html(mutationRate.val());
-            popSizeLabel.html(popSize.val());
-            run();
+        if (running) {
+            stop();
         }
+        
+        running = true;
+        gNum = 1;
+        // Init new population
+        population = new Population(target.val(), Number(popSize.val()), Number(mutationRate.val()) / 100);
+        // Init the user interface
+        computationPerSecond.html(1000 / (1000 / Number(speed.val())));
+        mutationRateLabel.html(mutationRate.val());
+        popSizeLabel.html(popSize.val());
+        run();
     });
 
     $('#resetButton').click(() => {
         if (running) {
             stop();
         }
-        console.log("Reset");
+        // Reset html fields showing the stats.
+        best.html("Best Monkey");
+        averageFitness.html("");
+        generationNum.html("");
+        phrases.html("");
     });
 
     $('#stopButton').click(() => {
@@ -43,6 +56,7 @@ $(function() {
         clearInterval(interval);
     }
 
+    // Shows the stats on the user interface
     function show() {
         best.html(population.pop[0].genes);
         averageFitness.html(population.averageFitness);
@@ -51,14 +65,15 @@ $(function() {
 
         var phrs = "";
 
-        for (let i = 1; i < population.pop.length; i++) {
-            phrs += '<span>' + population.pop[i].genes + '</span>';
+        for (let i = 1; i < population.pop.length && i < nPhrases.val(); i++) {
+            phrs += '<span>' + population.pop[i].genes.join("") + '</span>';
         }
 
         phrases.html(phrs);
     }
 
     function run() {
+        // An interval to compute a generation after some time.
         interval = setInterval(() => {
             runNext();
         }, 1000 / Number(speed.val()));
