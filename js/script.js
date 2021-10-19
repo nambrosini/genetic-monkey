@@ -21,18 +21,9 @@ $(function() {
 
     // Run button click
     $('#runButton').click(() => {
-        if (running) {
-            stop();
+        if (!running) {
+            init();
         }
-        
-        running = true;
-        gNum = 1;
-        // Init new population
-        population = new Population(target.val(), Number(popSize.val()), Number(mutationRate.val()) / 100);
-        // Init the user interface
-        computationPerSecond.html(1000 / (1000 / Number(speed.val())));
-        mutationRateLabel.html(mutationRate.val());
-        popSizeLabel.html(popSize.val());
         run();
     });
 
@@ -49,6 +40,13 @@ $(function() {
 
     $('#stopButton').click(() => {
         stop();
+    });
+
+    $('#stepButton').click(() => {
+        if (!running) {
+            init();
+        }
+        runNext();
     });
 
     function stop() {
@@ -77,6 +75,19 @@ $(function() {
         interval = setInterval(() => {
             runNext();
         }, 1000 / Number(speed.val()));
+    }
+
+    function init() {
+        if (!running) {
+            running = true;
+            gNum = 1;
+            // Init new population
+            population = new Population(target.val(), Number(popSize.val()), Number(mutationRate.val()) / 100);
+            // Init the user interface
+            computationPerSecond.html(1000 / (1000 / Number(speed.val())));
+            mutationRateLabel.html(mutationRate.val());
+            popSizeLabel.html(popSize.val());
+        }
     }
 
     function runNext() {
