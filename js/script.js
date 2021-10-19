@@ -18,19 +18,21 @@ $(function() {
     // The generation count
     var gNum = 0;
     var interval;
+    var hasEnded = true;
 
     // Run button click
     $('#runButton').click(() => {
-        if (!running) {
+        if (hasEnded) {
             init();
         }
         run();
     });
 
     $('#resetButton').click(() => {
-        if (running) {
+        if (running || hasEnded) {
             stop();
         }
+        hasEnded = true;
         // Reset html fields showing the stats.
         best.html("Best Monkey");
         averageFitness.html("");
@@ -43,7 +45,7 @@ $(function() {
     });
 
     $('#stepButton').click(() => {
-        if (!running) {
+        if (hasEnded) {
             init();
         }
         runNext();
@@ -78,24 +80,24 @@ $(function() {
     }
 
     function init() {
-        if (!running) {
-            running = true;
-            gNum = 1;
-            // Init new population
-            population = new Population(target.val(), Number(popSize.val()), Number(mutationRate.val()) / 100);
-            // Init the user interface
-            computationPerSecond.html(1000 / (1000 / Number(speed.val())));
-            mutationRateLabel.html(mutationRate.val());
-            popSizeLabel.html(popSize.val());
-        }
+        running = true;
+        hasEnded = false;
+        gNum = 1;
+        // Init new population
+        population = new Population(target.val(), Number(popSize.val()), Number(mutationRate.val()) / 100);
+        // Init the user interface
+        computationPerSecond.html(1000 / (1000 / Number(speed.val())));
+        mutationRateLabel.html(mutationRate.val());
+        popSizeLabel.html(popSize.val());
     }
 
     function runNext() {
-        if (!running) {
+        if (hasEnded) {
             clearInterval(interval);
+            running = false;
         }
         show();
-        running = population.simulateGeneration();
+        hasEnded = !population.simulateGeneration();
         gNum++;
     }
 });
